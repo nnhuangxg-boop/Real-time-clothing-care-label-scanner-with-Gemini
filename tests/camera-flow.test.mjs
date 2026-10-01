@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {readFileSync} from 'node:fs';
+test('hand motion cannot cancel an in-flight scan; completed results stay locked until next scan',async()=>{
+ const elements=new Map();
+ const element=id=>{if(!elements.has(id))elements.set(id,{textContent:'',hidden:false,disabled:false,style:{},addEventListener(){},setAttribute(){}});return elements.get(id);};
+ let finish,requests=0,clock=1000000;
+ const context=vm.createContext({t:text=>text,language:'zh',Date:{now:()=>clock},document:{getElementById:element,hidden:false,addEventListener(){},createElement(){return {getContext(){return {};},toDataURL(){return 'data:image/jpeg;base64,/9j/test';}};}},window:{addEventListener(){}},navigator:{},AbortController,setTimeout,clearTimeout,clearInterval,setInterval,console,fetch:async(url,options)=>{if(url==='/api/status')return {ok:true,json:async()=>({configured:true})};requests++;return new Promise(resolve=>{finish=()=>resolve({ok:true,json:async()=>({label_visible:true,duration_ms:100,dry:{status:'forbidden',title:'禁止烘干',detail:'不可烘干',evidence:'Do not tumble dry'},wash:{status:'conditional',title:'冷水洗',detail:'机洗冷水',evidence:'Machine wash cold'}})});});}});
+ vm.runInContext(readFileSync('public/app.js','utf8'),context);
+ vm.runInContext('running=true;windowStart=Date.now();capture=()=>({avg:120,edges:20,contrast:40,gray:Float32Array.from([Math.random()*255])});',context);
+ clock+=749;await vm.runInContext('tick()',context);assert.equal(requests,0);
+ clock+=1;const first=vm.runInContext('tick()',context);
+ for(let i=0;i<15;i++)await vm.runInContext('tick()',context);
+ assert.equal(requests,1);assert.equal(vm.runInContext('controller.signal.aborted',context),false);
+ finish();await first;
+ assert.equal(element('dryAnswer').textContent,'禁止烘干');assert.equal(element('washAnswer').textContent,'冷水洗');
+ for(let i=0;i<10;i++)await vm.runInContext('tick()',context);
+ assert.equal(requests,1);assert.equal(element('rescan').textContent,'扫下一件');
+ vm.runInContext('resetScan()',context);assert.equal(element('dryAnswer').textContent,'尚未识别');
+ vm.runInContext('lastCall=0;capture=()=>({avg:90,edges:2,contrast:12});',context);clock+=1999;await vm.runInContext('tick()',context);assert.equal(requests,1);clock+=1;const second=vm.runInContext('tick()',context);assert.equal(requests,2);finish();await second;
+});

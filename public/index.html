@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF"><meta name="description" content="对准衣服标签，自动查看水洗与滚筒烘干要求。">
+  <title>衣签 · 洗护扫描</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <div class="api-toolbar"><label class="language-picker"><span id="languageLabel">语言</span><select id="languageSelect" aria-label="语言"><option value="en">Eng</option><option value="zh" selected>简体中文</option></select></label><button id="apiToggle" class="api-toggle" aria-expanded="false" aria-controls="apiPanel">API</button></div>
+    <section id="apiPanel" class="api-panel" hidden aria-label="API 设置">
+      <form id="apiForm">
+        <label for="apiKey">Gemini API Key</label>
+        <input id="apiKey" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="512" placeholder="粘贴你的 API Key">
+        <p class="small">仅在当前页面保留，刷新后清除。Key 会经本站转发给 Google Gemini，本站不保存。</p>
+        <div class="api-actions"><button class="primary" type="submit">使用此 Key</button><button id="apiClear" class="secondary" type="button">清除</button></div>
+        <p id="apiMessage" role="status" class="small"></p>
+      </form>
+    </section>
+    <div class="workspace">
+      <section class="scan-panel" aria-label="扫描衣服标签">
+        <div class="camera" id="camera">
+          <video id="video" autoplay muted playsinline aria-label="后置摄像头实时画面"></video>
+          <div class="camera-placeholder" id="placeholder"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="5" y="12" width="38" height="28" rx="4" stroke="currentColor" stroke-width="2"/><path d="M16 12l3-5h10l3 5" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="26" r="8" stroke="currentColor" stroke-width="2"/></svg><strong>把洗护标签放进框内</strong><span>文字和图案都可以</span></div>
+          <div class="target" id="target" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <span class="camera-caption" id="cameraCaption">开启后自动扫描，无需按快门</span>
+        </div>
+        <div class="optics"><input id="zoom" type="range" min="1" max="2" step="0.01" value="1" aria-label="取景放大"><label id="lensControl" hidden><span>镜头</span> <select id="lens" aria-label="选择镜头"></select></label></div><div class="controls"><button id="start" class="primary" disabled>正在检查连接…</button><button id="rescan" class="secondary" disabled>重新扫描</button></div>
+        <p class="quota-status" id="quotaStatus" role="status"></p>
+        <p class="scan-status" id="status" role="status" aria-live="polite">正在检查识别服务。</p>
+      </section>
+      <section class="results" aria-label="洗护结果" aria-live="polite">
+        <div class="section-title"><span id="resultState">等待扫描</span></div>
+        <article class="result" id="dryCard"><div class="result-label"><span>01</span><h3>滚筒烘干</h3></div><p class="answer" id="dryAnswer">尚未识别</p><p class="detail" id="dryDetail">看清标签后，告诉你能否放进烘干机。</p></article>
+        <article class="result" id="washCard"><div class="result-label"><span>02</span><h3>水洗</h3></div><p class="answer" id="washAnswer">尚未识别</p><p class="detail" id="washDetail">温度、机洗或手洗，分别判断。</p></article>
+        <figure id="framePreview" class="frame-preview" hidden><img id="frameImage" alt="本次识别实际使用的标签画面"><figcaption>结果对应这张画面，不是当前移动中的镜头。</figcaption></figure><details class="evidence" id="evidence" hidden><summary>查看识别依据</summary><p id="evidenceText"></p><p id="timing" class="small"></p></details>
+      </section>
+    </div>
+    <div id="configuration" class="configuration" hidden>请点击右上角 API，填写 Gemini API Key。</div>
+  </main>
+  <script src="/i18n.js" defer></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>

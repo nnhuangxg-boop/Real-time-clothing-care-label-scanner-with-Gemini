@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>调用统计</title>
+<style>:root{font-family:Arial,"PingFang SC",sans-serif;color:#151519;background:#f7f7f8}body{max-width:1120px;margin:auto;padding:24px}header{display:flex;align-items:center;justify-content:space-between}h1{font-size:26px}h2{font-size:19px;margin-top:32px}p{color:#686871;line-height:1.7;font-size:14px}button{padding:10px 18px;border:0;background:#002fa7;color:#fff;border-radius:5px;font:inherit;cursor:pointer}table{width:100%;border-collapse:collapse;font-size:14px;background:white}td,th{padding:12px;text-align:left;border-bottom:1px solid #dedee3;white-space:nowrap}th{font-weight:600}.scroll{overflow:auto}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{padding:18px;background:white;border-top:2px solid #002fa7}.card span{display:block;font-size:13px;color:#686871}.card strong{display:block;font-size:28px;margin-top:12px}.note{border-left:3px solid #002fa7;padding-left:14px}@media(max-width:600px){body{padding:16px}.cards{grid-template-columns:1fr 1fr}}#error{color:#a01919}</style>
+<header><h1>调用统计</h1><button id="refresh">刷新</button></header>
+<p>仅本机可见 · 浏览器累计 10 次 / IP 每日 30 次 / 全站每日 200 次 · 自带 Key 不受体验额度限制</p>
+<p id="updated"></p><p id="error" role="status"></p><div id="cards" class="cards"></div>
+<h2>近 30 天：调用来源</h2><div id="sources" class="scroll"></div>
+<p class="note">“明确结果”表示水洗和烘干都返回了明确状态，不代表识别准确。一次请求中任一项不确定归为“不确定”；超时退回浏览器体验次数，但仍计入 IP/全站每日调用上限；失败、超时也可能产生模型费用。用量缺失的请求不按零成本推算。</p>
+<h2>近 30 天：体验与回访</h2><div id="funnel" class="scroll"></div>
+<h2>额度拦截</h2><div id="blocked" class="scroll"></div>
+<h2>每日调用（UTC）</h2><div id="daily" class="scroll"></div>
+<h2>浏览器调用排行（最多 30 个）</h2><div id="browsers" class="scroll"></div>
+<h2>IP 调用排行（最多 30 个）</h2><div id="ips" class="scroll"></div>
+<h2>界面语言</h2><div id="languages" class="scroll"></div>
+<h2>模型</h2><div id="models" class="scroll"></div>
+<h2>最近 50 次调用</h2><div id="recent" class="scroll"></div>
+<p>数据从启用统计后开始记录。浏览器、IP 均不等于独立用户；不同浏览器或清除 Cookie 会产生新身份。浏览器使用随机凭证，IP 使用带密钥的摘要；不记录原始 IP、API Key、图片、识别原文。统计记录暂保存在本机，页面展示近 30 天，累计额度保留。</p>
+<script src="/admin.js" defer></script></html>

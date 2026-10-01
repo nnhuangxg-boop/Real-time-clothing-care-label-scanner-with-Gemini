@@ -1,0 +1,16 @@
+*
+!api
+!api/**
+!worker
+!worker/**
+!public
+!public/**
+!scripts
+!scripts/build.mjs
+!scripts/postgres-store.mjs
+!scripts/pg-summary.mjs
+!scripts/admin.html
+!scripts/admin.js
+!package.json
+!package-lock.json
+!vercel.json
