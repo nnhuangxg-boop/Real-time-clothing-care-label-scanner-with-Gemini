@@ -18,3 +18,5 @@ The idea is to keep things simple: no installation, no account, and support for 
 Hopefully, it becomes a little tool you reach for while doing laundry—one less symbol chart to check, and one less favorite shirt accidentally shrunk. Recognition can still be wrong. When the image is blurry or the information is incomplete, the app can report uncertainty. If you are unsure, check the original label clearly before proceeding.
 
 [Try it in your browser →](https://care-scan-chi.vercel.app/)
+
+This project is open source under the [MIT License](LICENSE). You are welcome to use, modify, and share it while retaining the copyright and license notices. The code license does not include access to this site's API key or free service quota.
