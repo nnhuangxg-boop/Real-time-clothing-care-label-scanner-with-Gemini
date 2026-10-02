@@ -1,5 +1,7 @@
 # Real-time clothing care label scanner with Gemini
 
+[简体中文](README.md) | [English](README.en.md)
+
 **打开摄像头，扫一眼衣服标签，就知道该怎么洗、能不能烘。**
 
 这个项目来自一个很日常的烦恼：洗完衣服准备放进烘干机，却不知道哪件能烘、哪件会缩水。答案其实就在洗护标签上，但那些方框、圆圈、横线和小点，实在不容易记住。
