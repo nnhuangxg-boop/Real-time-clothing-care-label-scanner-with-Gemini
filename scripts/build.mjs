@@ -4,5 +4,4 @@ const assets=Object.fromEntries(Object.entries(files).map(([route,[file,type]])=
 const logic=readFileSync('worker/logic.mjs','utf8').replaceAll('export ','');
 const source=readFileSync('worker/index.mjs','utf8').replace("import { expandCompact, compactSchema, compactPrompt } from './logic.mjs';",logic).replace('// ASSET_BUNDLE',`const assets=${JSON.stringify(assets)};`);
 mkdirSync('dist/server',{recursive:true});writeFileSync('dist/server/index.js',source);
-writeFileSync('dist/server/wrangler.json',JSON.stringify({name:'care-scan',main:'index.js',compatibility_date:'2026-09-01'}));
-console.log('Built care scanner (no external dependencies).');
+console.log('Built care scanner.');

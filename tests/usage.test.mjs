@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync,readFileSync} from 'node:fs';
+import {mkdtempSync,readFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {createUsageStore} from '../scripts/usage-store.mjs';
@@ -36,8 +36,15 @@ test('daily limits reset at UTC midnight; browser allowance does not; forged coo
  }finally{store.close();}
 });
 
-test('two server connections share quotas and persisted identity after restart',()=>{
- const path=join(mkdtempSync(join(tmpdir(),'care-usage-')),'usage.sqlite');let a=createUsageStore(path),b=createUsageStore(path);
+test('two server connections share quotas and persisted identity after restart',t=>{
+ const directory=mkdtempSync(join(tmpdir(),'care-usage-'));
+ const path=join(directory,'usage.sqlite');let a,b;
+ t.after(()=>{
+  try{a?.close();}catch{}
+  try{b?.close();}catch{}
+  rmSync(directory,{recursive:true,force:true});
+ });
+ a=createUsageStore(path);b=createUsageStore(path);
  const ctx=a.identity('','192.0.2.9',true),cookie=ctx.cookie.split(';')[0];
  for(let i=0;i<10;i++)assert.equal(reserve(i%2?a:b,ctx).allowed,true);
  assert.equal(reserve(a,ctx).allowed,false);a.close();b.close();
